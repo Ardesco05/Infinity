@@ -1,0 +1,128 @@
+#include <iostream>
+using namespace std;
+
+// Struktur Node 
+struct Node {
+    int data;
+    Node *next;
+};
+
+// Pointer global untuk kepala list
+Node *start = NULL;
+
+//  untuk membuat node baru
+Node* create_new_node(int value) {
+    Node* new_node = new Node;
+    new_node->data = value;
+    new_node->next = NULL;
+    return new_node;
+}
+
+//  untuk menyisipkan node di awal list
+void insert_at_beg(int value) {
+    Node* new_node = create_new_node(value);
+    if (start == NULL) {
+        start = new_node;
+    } else {
+        new_node->next = start;
+        start = new_node;
+    }
+    cout << "-> Nilai " << value << " telah ditambahkan di awal list.\n";
+}
+
+// untuk menyisipkan node setelah nilai tertentu
+void insert_after(int target_val, int new_val) {
+    if (start == NULL) {
+        cout << "-> List masih kosong, tidak bisa menyisipkan.\n";
+        return;
+    }
+    Node *ptr = start;
+    while (ptr != NULL && ptr->data != target_val) {
+        ptr = ptr->next;
+    }
+    if (ptr != NULL) {
+        Node* new_node = create_new_node(new_val);
+        new_node->next = ptr->next;
+        ptr->next = new_node;
+        cout << "-> Berhasil menyisipkan " << new_val << " setelah " << target_val << ".\n";
+    } else {
+        cout << "-> Nilai " << target_val << " tidak ditemukan dalam list.\n";
+    }
+}
+
+// untuk menampilkan seluruh isi list
+void display() {
+    if (start == NULL) {
+        cout << "\n[ List saat ini kosong ]\n";
+        return;
+    }
+    Node *ptr = start;
+    cout << "\n[ Isi List ]\n";
+    cout << "START -> ";
+    while (ptr != NULL) {
+        cout << ptr->data << " -> ";
+        ptr = ptr->next;
+    }
+    cout << "NULL\n";
+}
+
+// untuk membersihkan semua memori yang dialokasikan
+void delete_list() {
+    Node *ptr = start;
+    Node *next_node;
+    while (ptr != NULL) {
+        next_node = ptr->next;
+        delete ptr;
+        ptr = next_node;
+    }
+    start = NULL; // Set start ke NULL setelah semua dihapus
+}
+
+
+int main() {
+    int choice, value, target;
+
+    cout << "Selamat datang, Tuanku Raja Iblis.\n";
+    cout << "Sistem manajemen Linked List siap menerima perintah Anda.\n";
+
+    while (true) {
+        cout << "\n====================================\n";
+        cout << "           MENU PERINTAH\n";
+        cout << "====================================\n";
+        cout << "1. Tambah Node di Awal List\n";
+        cout << "2. Sisipkan Node Setelah Nilai Tertentu\n";
+        cout << "3. Tampilkan Seluruh Isi List\n";
+        cout << "4. Keluar dari Program\n";
+        cout << "====================================\n";
+        cout << "Pilihan Anda: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Masukkan nilai untuk node baru: ";
+                cin >> value;
+                insert_at_beg(value);
+                break;
+            case 2:
+                cout << "Masukkan nilai yang sudah ada (target): ";
+                cin >> target;
+                cout << "Masukkan nilai untuk node baru: ";
+                cin >> value;
+                insert_after(target, value);
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                cout << "\nProgram dihentikan. Semua memori telah dibersihkan.\n";
+                cout << "Hamba menantikan perintah Anda selanjutnya, Tuanku.\n";
+                delete_list(); // Membersihkan memori sebelum keluar
+                return 0;
+            default:
+                cout << "\nPerintah tidak valid! Silakan pilih dari 1-4.\n";
+                break;
+        }
+    }
+
+    return 0;
+}
