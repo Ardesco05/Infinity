@@ -1,128 +1,124 @@
 #include <iostream>
+#include <string>
+
 using namespace std;
 
-// Struktur Node 
-struct Node {
-    int data;
-    Node *next;
+struct Barang {
+    string namaBarang;
+    int jumlah;
+    Barang *next;
 };
 
-// Pointer global untuk kepala list
-Node *start = NULL;
+Barang *head = NULL;
 
-//  untuk membuat node baru
-Node* create_new_node(int value) {
-    Node* new_node = new Node;
-    new_node->data = value;
-    new_node->next = NULL;
-    return new_node;
+Barang* create_new_item(string nama, int jml) {
+    Barang* newItem = new Barang;
+    newItem->namaBarang = nama;
+    newItem->jumlah = jml;
+    newItem->next = NULL;
+    return newItem;
 }
-
-//  untuk menyisipkan node di awal list
-void insert_at_beg(int value) {
-    Node* new_node = create_new_node(value);
-    if (start == NULL) {
-        start = new_node;
+void tambahBarang(string nama, int jml) {
+    Barang* newItem = create_new_item(nama, jml);
+    if (head == NULL) {
+        head = newItem;
     } else {
-        new_node->next = start;
-        start = new_node;
+        newItem->next = head;
+        head = newItem;
     }
-    cout << "-> Nilai " << value << " telah ditambahkan di awal list.\n";
+    cout << "\n-> '" << nama << "' (" << jml << ") telah ditambahkan.\n";
 }
 
-// untuk menyisipkan node setelah nilai tertentu
-void insert_after(int target_val, int new_val) {
-    if (start == NULL) {
-        cout << "-> List masih kosong, tidak bisa menyisipkan.\n";
+void hapusBarang(string nama) {
+    if (head == NULL) {
+        cout << "\n-> Inventaris kosong.\n";
         return;
     }
-    Node *ptr = start;
-    while (ptr != NULL && ptr->data != target_val) {
-        ptr = ptr->next;
-    }
-    if (ptr != NULL) {
-        Node* new_node = create_new_node(new_val);
-        new_node->next = ptr->next;
-        ptr->next = new_node;
-        cout << "-> Berhasil menyisipkan " << new_val << " setelah " << target_val << ".\n";
-    } else {
-        cout << "-> Nilai " << target_val << " tidak ditemukan dalam list.\n";
-    }
-}
 
-// untuk menampilkan seluruh isi list
-void display() {
-    if (start == NULL) {
-        cout << "\n[ List saat ini kosong ]\n";
+    Barang *current = head;
+    Barang *previous = NULL;
+
+    if (current != NULL && current->namaBarang == nama) {
+        head = current->next;
+        delete current;
+        cout << "\n-> '" << nama << "' telah dihapus.\n";
         return;
     }
-    Node *ptr = start;
-    cout << "\n[ Isi List ]\n";
-    cout << "START -> ";
-    while (ptr != NULL) {
-        cout << ptr->data << " -> ";
-        ptr = ptr->next;
+
+    while (current != NULL && current->namaBarang != nama) {
+        previous = current;
+        current = current->next;
     }
-    cout << "NULL\n";
+
+    if (current == NULL) {
+        cout << "\n-> '" << nama << "' tidak ditemukan.\n";
+        return;
+    }
+
+    previous->next = current->next;
+    delete current;
+    cout << "\n-> '" << nama << "' telah dihapus.\n";
 }
 
-// untuk membersihkan semua memori yang dialokasikan
-void delete_list() {
-    Node *ptr = start;
-    Node *next_node;
+void tampilkanInventaris() {
+    if (head == NULL) {
+        cout << "\n[ Inventaris kosong ]\n";
+        return;
+    }
+
+    Barang *ptr = head;
+    cout << "\nDAFTAR INVENTARIS\n";
+    int nomor = 1;
     while (ptr != NULL) {
-        next_node = ptr->next;
+        cout << nomor++ << ". " << ptr->namaBarang << " (" << ptr->jumlah << ")\n";
+        ptr = ptr->next;
+    }
+}
+
+void clearMemory() {
+    Barang *ptr = head;
+    Barang *nextNode;
+    while (ptr != NULL) {
+        nextNode = ptr->next;
         delete ptr;
-        ptr = next_node;
+        ptr = nextNode;
     }
-    start = NULL; // Set start ke NULL setelah semua dihapus
+    head = NULL;
 }
-
 
 int main() {
-    int choice, value, target;
-
-    cout << "Selamat datang, Tuanku Raja Iblis.\n";
-    cout << "Sistem manajemen Linked List siap menerima perintah Anda.\n";
+    int choice, jumlah;
+    string nama;
 
     while (true) {
-        cout << "\n====================================\n";
-        cout << "           MENU PERINTAH\n";
-        cout << "====================================\n";
-        cout << "1. Tambah Node di Awal List\n";
-        cout << "2. Sisipkan Node Setelah Nilai Tertentu\n";
-        cout << "3. Tampilkan Seluruh Isi List\n";
-        cout << "4. Keluar dari Program\n";
-        cout << "====================================\n";
-        cout << "Pilihan Anda: ";
+        cout << "\nMENU:\n1. Tambah Barang\n2. Hapus Barang\n3. Tampilkan Inventaris\n4. Keluar\nPilihan: ";
         cin >> choice;
+        cin.ignore(10000, '\n');
 
         switch (choice) {
             case 1:
-                cout << "Masukkan nilai untuk node baru: ";
-                cin >> value;
-                insert_at_beg(value);
+                cout << "Nama barang: ";
+                getline(cin, nama);
+                cout << "Jumlah: ";
+                cin >> jumlah;
+                tambahBarang(nama, jumlah);
                 break;
             case 2:
-                cout << "Masukkan nilai yang sudah ada (target): ";
-                cin >> target;
-                cout << "Masukkan nilai untuk node baru: ";
-                cin >> value;
-                insert_after(target, value);
+                cout << "Nama barang yang dihapus: ";
+                getline(cin, nama);
+                hapusBarang(nama);
                 break;
             case 3:
-                display();
+                tampilkanInventaris();
                 break;
             case 4:
-                cout << "\nProgram dihentikan. Semua memori telah dibersihkan.\n";
-                cout << "Hamba menantikan perintah Anda selanjutnya, Tuanku.\n";
-                delete_list(); // Membersihkan memori sebelum keluar
+                clearMemory();
+                cout << "\nProgram selesai.\n";
                 return 0;
             default:
-                cout << "\nPerintah tidak valid! Silakan pilih dari 1-4.\n";
+                cout << "\nPilihan tidak valid.\n";
                 break;
         }
     }
-
     return 0;
 }
