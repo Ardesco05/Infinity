@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+void printVector(const vector<string>& arr) {
+    for (const string& item : arr) {
+        cout << item << " ";
+    }
+    cout << endl;
+}
+
+void bubbleSort(vector<string>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n - i - 1; ++j) {
+            
+            if (arr[j] > arr[j + 1]) {
+            
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    vector<string> barang_di_gudang = {"Apel", "Pisang", "Ceri", "Mangga", "Jambu"};
+
+    cout << "Sebelum: ";
+    printVector(barang_di_gudang);
+
+    bubbleSort(barang_di_gudang);
+
+    cout << "Setelah: ";
+    printVector(barang_di_gudang);
+
+    return 0;
+}
