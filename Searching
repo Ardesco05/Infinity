@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+struct BarangKerajaan {
+    string nama_barang;
+    string jenis;
+    int tahun_penemuan;
+};
+
+int sequentialSearch(const vector<BarangKerajaan>& gudang, const string& namaTarget) {
+    for (int i = 0; i < gudang.size(); ++i) {
+    
+        if (gudang[i].nama_barang == namaTarget) {
+            return i; 
+        }
+    }
+    return -1; 
+}
+
+int main() {
+    vector<BarangKerajaan> gudangPusaka = {
+        {"Pedang Zulfikar", "Senjata Legendaris", 624},
+        {"Mahkota Seribu Berlian", "Perhiasan Kerajaan", 1292},
+        {"Jubah Gaib Pelindung", "Artefak Magis", 850},
+        {"Piala Keabadian", "Benda Pusaka", 325}
+    };
+
+    string namaDicari;
+
+    cout << "Gudang Pusaka Kerajaan." << endl;
+    cout << "Masukkan nama barang yang dicari: ";
+    getline(cin, namaDicari);
+
+    int hasilIndex = sequentialSearch(gudangPusaka, namaDicari);
+
+    if (hasilIndex != -1) {
+        cout << "\nBarang Ditemukan" << endl;
+        cout << "Nama   : " << gudangPusaka[hasilIndex].nama_barang << endl;
+        cout << "Jenis  : " << gudangPusaka[hasilIndex].jenis << endl;
+        cout << "Tahun  : " << gudangPusaka[hasilIndex].tahun_penemuan << endl;
+    } else {
+        cout << "\nMohon maaf, Tuanku. Barang '" << namaDicari << "' tidak ditemukan." << endl;
+    }
+
+    return 0;
+}
