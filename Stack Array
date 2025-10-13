@@ -1,0 +1,81 @@
+#include <iostream>
+using namespace std;
+
+#define MAX 5  
+
+struct Stack {
+    string barang[MAX];
+    int top = -1;
+
+    void push(string item) {
+        if (top == MAX - 1)
+            cout << "Stack penuh!\n";
+        else
+            barang[++top] = item;
+    }
+
+    void pop() {
+        if (top == -1)
+            cout << "Stack kosong!\n";
+        else
+            cout << "Mengeluarkan: " << barang[top--] << endl;
+    }
+
+    void peek() {
+        if (top == -1)
+            cout << "Stack kosong!\n";
+        else
+            cout << "Barang teratas: " << barang[top] << endl;
+    }
+
+    void tampil() {
+        if (top == -1)
+            cout << "Stack kosong!\n";
+        else {
+            cout << "Isi stack:\n";
+            for (int i = top; i >= 0; i--)
+                cout << "- " << barang[i] << endl;
+        }
+    }
+};
+
+int main() {
+    Stack s;
+    int pilihan;
+    string item;
+
+    do {
+        cout << "\n=== MENU STACK BARANG ===\n";
+        cout << "1. Push (Tambah Barang)\n";
+        cout << "2. Pop (Hapus Barang Teratas)\n";
+        cout << "3. Peek (Lihat Barang Teratas)\n";
+        cout << "4. Tampil Semua Barang\n";
+        cout << "5. Keluar\n";
+        cout << "Pilih: ";
+        cin >> pilihan;
+
+        switch (pilihan) {
+            case 1:
+                cout << "Masukkan nama barang: ";
+                cin >> item;
+                s.push(item);
+                break;
+            case 2:
+                s.pop();
+                break;
+            case 3:
+                s.peek();
+                break;
+            case 4:
+                s.tampil();
+                break;
+            case 5:
+                cout << "Keluar...\n";
+                break;
+            default:
+                cout << "Pilihan tidak valid!\n";
+        }
+    } while (pilihan != 5);
+
+    return 0;
+}
