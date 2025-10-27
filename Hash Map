@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class HashMap {
+private:
+    static const int CAPACITY = 10; // jumlah bucket
+    vector<pair<string, int>> table[CAPACITY];
+
+    int hashFunction(string key) {
+        int hash = 0;
+        for (char c : key) {
+            hash += c;
+        }
+        return hash % CAPACITY;
+    }
+
+public:
+    void put(string key, int value) {
+        int index = hashFunction(key);
+        auto &bucket = table[index];
+
+        // cek apakah key sudah ada → update jika ada
+        for (auto &kv : bucket) {
+            if (kv.first == key) {
+                kv.second = value;
+                return;
+            }
+        }
+
+        // jika belum ada → tambahkan
+        bucket.push_back(make_pair(key, value));
+    }
+
+    int get(string key) {
+        int index = hashFunction(key);
+        auto &bucket = table[index];
+
+        // cari key di dalam bucket
+        for (auto &kv : bucket) {
+            if (kv.first == key) {
+                return kv.second;
+            }
+        }
+        return -1; // -1 = not found (sederhana)
+    }
+
+    bool removeKey(string key) {
+        int index = hashFunction(key);
+        auto &bucket = table[index];
+
+        for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+            if (it->first == key) {
+                bucket.erase(it);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void printAll() {
+        for (int i = 0; i < CAPACITY; i++) {
+            cout << "Bucket[" << i << "]: ";
+            for (auto &kv : table[i]) {
+                cout << "(" << kv.first << ", " << kv.second << ") ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    HashMap hm;
+
+    hm.put("apel", 10);
+    hm.put("pisang", 5);
+    hm.put("apel", 12); // update
+
+    cout << "Value 'apel': " << hm.get("apel") << endl;
+    cout << "Value 'pisang': " << hm.get("pisang") << endl;
+
+    hm.removeKey("pisang");
+
+    cout << "\nIsi HashMap: " << endl;
+    hm.printAll();
+
+    return 0;
+}
